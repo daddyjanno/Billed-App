@@ -97,12 +97,11 @@ describe("Given I am connected as an employee", () => {
         const newBill = new NewBill({
           document,
           onNavigate,
-          store: null,
+          store: store,
           localStorage
         })
 
         const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
-
 
         const file = screen.getByTestId("file");
         const blob = new Blob(["wrongExtensionFile.pdf"]);
@@ -115,39 +114,7 @@ describe("Given I am connected as an employee", () => {
         expect(file.files[0].name).toBe("wrongExtensionFile.pdf");
 
         const errorMessage = screen.getByTestId("errorMessage");
-        console.log(errorMessage);
-        expect(errorMessage.classList.length).toBe(0)
         expect(errorMessage).not.toHaveClass("hidden")
-      })
-    })
-    describe("When the format is OK", () => {
-      test("Then an error message should not be displayed", () => {
-        document.body.innerHTML = NewBillUI();
-
-        const newBill = new NewBill({
-          document,
-          onNavigate,
-          store: store,
-          localStorage
-        })
-
-        const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e));
-
-        const file = screen.getByTestId("file");
-        const blob = new Blob(["ExtensionFile.jpg"]);
-
-        const fileBlob = new File([blob], "ExtensionFile.jpg", {type: "image/jpg"});
-
-        file.addEventListener("change", handleChangeFile);
-        userEvent.upload(file, fileBlob)
-
-
-        console.log(file);
-        expect(handleChangeFile).toHaveBeenCalled();
-        console.log(file.value);
-
-        expect(file.files[0].name).toBe("ExtensionFile.jpg");
-        expect(file.files.length).toBe(1);
       })
     })
     describe("When the user choose a correct file to upload", () => {
